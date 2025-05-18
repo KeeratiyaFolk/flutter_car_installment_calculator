@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_car_installment_calculator/views/inupt_screen_ui.dart';
+import 'package:flutter_car_installment_calculator/views/result_screen_ui.dart';
 import 'package:flutter_car_installment_calculator/views/splash_screen_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(
-    FlutterCarInstallmenrCalculator(),
+    Fluttercarinstallmentcalculation(),
   );
 }
 
-class FlutterCarInstallmenrCalculator extends StatefulWidget {
-  const FlutterCarInstallmenrCalculator({super.key});
+class Fluttercarinstallmentcalculation extends StatefulWidget {
+  const Fluttercarinstallmentcalculation({super.key});
 
   @override
-  State<FlutterCarInstallmenrCalculator> createState() => _FlutterCarInstallmenrCalculatorState();
+  State<Fluttercarinstallmentcalculation> createState() =>
+      _FluttercarinstallmentcalculationState();
 }
 
-class _FlutterCarInstallmenrCalculatorState extends State<FlutterCarInstallmenrCalculator> {
+class _FluttercarinstallmentcalculationState
+    extends State<Fluttercarinstallmentcalculation> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_car_installment_calculator/views/input_screen_ui.dart';
+import 'package:flutter_car_installment_calculator/views/inupt_screen_ui.dart';
 
 class SplashScreenUi extends StatefulWidget {
   const SplashScreenUi({super.key});
@@ -9,16 +9,13 @@ class SplashScreenUi extends StatefulWidget {
 }
 
 class _SplashScreenUiState extends State<SplashScreenUi> {
-
   @override
   void initState() {
-    //โค้ด delay หน้าจอ3วิ ไปหน้าinput
     Future.delayed(
-      //ระยะเวลา
       Duration(seconds: 3),
-      //ครบเวลาแล้วทำอะไรต่อ ย้อนกลับไม่ได้ 
-      ()=>Navigator.pushReplacement(
-        context,MaterialPageRoute(
+      () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
           builder: (context) => InputScreenUi(),
         ),
       ),
@@ -35,49 +32,42 @@ class _SplashScreenUiState extends State<SplashScreenUi> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/img01.png',
-              width: 250.0,
+              "assets/images/img01.png",
+              width: 200,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20),
             Text(
-              'Car Installment',
+              'Car installment ',
               style: TextStyle(
-                fontSize: 30.0,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.lightGreenAccent,
               ),
             ),
             Text(
-              'Calculator',
+              'calculation',
               style: TextStyle(
-                fontSize: 30.0,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.lightGreenAccent,
               ),
             ),
-            SizedBox(
-              height: 30.0,
-            ),
+            SizedBox(height: 30),
             CircularProgressIndicator(
               color: Colors.white,
             ),
-            SizedBox(
-              height: 30.0,
-            ),
+            SizedBox(height: 30),
             Text(
-              'Created by DTI-SAU',
+              'created by: DTI-SAU',
               style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
+                fontSize: 17,
                 color: Colors.lightGreenAccent,
               ),
             ),
             Text(
-              'Version 1.0.0',
+              'Version 1.0',
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.lightGreenAccent,
               ),

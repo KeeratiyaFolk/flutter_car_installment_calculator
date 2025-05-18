@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_car_installment_calculator/views/result_screen_ui.dart';
+import 'package:image_picker/image_picker.dart';
 
 class InputScreenUi extends StatefulWidget {
   const InputScreenUi({super.key});
@@ -11,37 +11,59 @@ class InputScreenUi extends StatefulWidget {
 }
 
 class _InputScreenUiState extends State<InputScreenUi> {
-  //สร้างตัวแปรเก็บรูป
+  // สร้างตัวแปรควบคุม TextField
+  TextEditingController _carPriceCtrl = TextEditingController();
+  TextEditingController _interestCtrl = TextEditingController();
+
+  int _dowmctrl = 10;
+
+  int _monthCtrl = 24;
+  // สร้างตัวแปรเก็บรูปที่เลทอกจากกล้องหรือแกลอรี่
   File? _imageFile;
+
+  _waringDialog(msg) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('คำเตือน'),
+        content: Text(msg),
+        actions: [
+          OutlinedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'ตกลง',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // สร้างเมธอลเปิดกล้อง
   _openCamera() async {
     final pickerImage = await ImagePicker().pickImage(
       source: ImageSource.camera,
     );
     if (pickerImage == null) return;
+
     setState(() {
       _imageFile = File(pickerImage.path);
     });
   }
 
+  // สร้างเมธอลเปิดแกลอรี่
   _openGallery() async {
     final pickerImage = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
     if (pickerImage == null) return;
+
     setState(() {
       _imageFile = File(pickerImage.path);
     });
   }
-
-  //ควบคุมtextfield
-  TextEditingController _carPriceCtrl = TextEditingController();
-  TextEditingController _interestCtrl = TextEditingController();
-
-  //radio
-  int _downCtrl = 10;
-
-  //dropdown
-  int _monthCtrl = 24;
 
   @override
   Widget build(BuildContext context) {
@@ -59,24 +81,24 @@ class _InputScreenUiState extends State<InputScreenUi> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
-            left: 40.0,
-            right: 40.0,
+            left: 40,
+            right: 40,
           ),
           child: Center(
             child: Column(
               children: [
                 SizedBox(
-                  height: 50.0,
+                  height: 10,
                 ),
                 Text(
                   'คำนวณค่างวดรถ',
                   style: TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
                   ),
                 ),
                 SizedBox(
-                  height: 40.0,
+                  height: 40,
                 ),
                 Container(
                   padding: EdgeInsets.all(8),
@@ -89,32 +111,26 @@ class _InputScreenUiState extends State<InputScreenUi> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      //เปิด snackbar ให้ผู้ใช้เลือกเปิดกล้องหรือแกลอรี่
+                      // เราจะเปิด snack bar ให้ผู้ใช้เลือกกล้อง และแกลอรี่
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: Colors.green,
                           content: Column(
                             children: [
                               ListTile(
-                                onTap: () {
-                                  _openCamera();
-                                },
-                                title: Text('เปิดกล้อง Open Camera'),
-                                textColor: Colors.white,
+                                onTap: () {},
+                                title: Text('เปิดกล้อง'),
                                 leading: Icon(
                                   Icons.camera,
-                                  color: Colors.greenAccent,
+                                  color: Colors.amber,
                                 ),
                               ),
                               ListTile(
-                                onTap: () {
-                                  _openGallery();
-                                },
-                                title: Text('เปิดแกลอรี่ Open Gallery'),
-                                textColor: Colors.white,
+                                onTap: () {},
+                                title: Text('เปิดแกลอรี่'),
                                 leading: Icon(
                                   Icons.image,
-                                  color: Colors.greenAccent,
+                                  color: Colors.amber,
                                 ),
                               ),
                             ],
@@ -127,7 +143,7 @@ class _InputScreenUiState extends State<InputScreenUi> {
                             borderRadius: BorderRadius.circular(8),
                             child: Image.asset(
                               'assets/images/img02.png',
-                              width: 250.0,
+                              width: 150,
                               fit: BoxFit.cover,
                             ),
                           )
@@ -135,14 +151,15 @@ class _InputScreenUiState extends State<InputScreenUi> {
                             borderRadius: BorderRadius.circular(8),
                             child: Image.file(
                               _imageFile!,
-                              width: 250.0,
+                              height: 100,
+                              width: 150,
                               fit: BoxFit.cover,
                             ),
                           ),
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 20,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -154,17 +171,21 @@ class _InputScreenUiState extends State<InputScreenUi> {
                   controller: _carPriceCtrl,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '0.00',
-                      hintStyle: TextStyle(fontSize: 16, color: Colors.grey)),
+                    border: OutlineInputBorder(),
+                    hintText: '0.00',
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
                 SizedBox(
-                  height: 15.0,
+                  height: 10,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'จำนวนเงินดาว (%)',
+                    'จำนวนเงินดาวน์ (%)',
                   ),
                 ),
                 Row(
@@ -172,59 +193,69 @@ class _InputScreenUiState extends State<InputScreenUi> {
                     Radio(
                       onChanged: (value) {
                         setState(() {
-                          _downCtrl = value!;
+                          _dowmctrl = value!;
                         });
                       },
                       value: 10,
-                      groupValue: _downCtrl,
+                      groupValue: _dowmctrl,
                     ),
                     Text('10'),
                     Radio(
                       onChanged: (value) {
                         setState(() {
-                          _downCtrl = value!;
+                          _dowmctrl = value!;
                         });
                       },
                       value: 20,
-                      groupValue: _downCtrl,
+                      groupValue: _dowmctrl,
                     ),
                     Text('20'),
                     Radio(
                       onChanged: (value) {
                         setState(() {
-                          _downCtrl = value!;
+                          _dowmctrl = value!;
                         });
                       },
                       value: 30,
-                      groupValue: _downCtrl,
+                      groupValue: _dowmctrl,
                     ),
                     Text('30'),
                     Radio(
                       onChanged: (value) {
                         setState(() {
-                          _downCtrl = value!;
+                          _dowmctrl = value!;
                         });
                       },
                       value: 40,
-                      groupValue: _downCtrl,
+                      groupValue: _dowmctrl,
                     ),
                     Text('40'),
                     Radio(
                       onChanged: (value) {
                         setState(() {
-                          _downCtrl = value!;
+                          _dowmctrl = value!;
                         });
                       },
                       value: 50,
-                      groupValue: _downCtrl,
+                      groupValue: _dowmctrl,
                     ),
                     Text('50'),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          _dowmctrl = value!;
+                        });
+                      },
+                      value: 60,
+                      groupValue: _dowmctrl,
+                    ),
+                    Text('60')
                   ],
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'ระยะเวลาผ่อน (เดือน)',
+                    'จำนวนเงินดาวน์ (%)',
                   ),
                 ),
                 Container(
@@ -267,27 +298,60 @@ class _InputScreenUiState extends State<InputScreenUi> {
                   ),
                 ),
                 SizedBox(
-                  height: 15.0,
+                  height: 10,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'อัตราดอกเบี้ย (%/ปี)',
+                    'อัตราดอกเบี้ย (ปี)',
                   ),
                 ),
                 TextField(
                   controller: _interestCtrl,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '0.00',
-                      hintStyle: TextStyle(fontSize: 16, color: Colors.grey)),
+                    border: OutlineInputBorder(),
+                    hintText: '0.00',
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_carPriceCtrl.text.isEmpty) {
+                      _waringDialog('กรุณากรอกราคารถ');
+                    } else if (_interestCtrl.text.isEmpty) {
+                      _waringDialog('กรุณากรอกอัตราดอกเบี้ย');
+                    } else {
+                      double carPrice = double.parse(_carPriceCtrl.text);
+                      double interest = double.parse(_interestCtrl.text);
+
+                      double balance =
+                          carPrice - (carPrice * _dowmctrl / 100.0);
+
+                      double totalInterest =
+                          (balance * interest / 100 / 12) * _monthCtrl;
+
+                      double payPerMonth =
+                          (balance + totalInterest) / _monthCtrl;
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResultScreenUi(
+                            carPrice: carPrice,
+                            parPerMonth: payPerMonth,
+                            month: _monthCtrl,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   child: Text(
                     'คำนวณ',
                     style: TextStyle(
@@ -306,10 +370,17 @@ class _InputScreenUiState extends State<InputScreenUi> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      _carPriceCtrl.text = '';
+                      _dowmctrl = 10;
+                      _monthCtrl = 24;
+                      _interestCtrl.text = '';
+                    });
+                  },
                   child: Text(
                     'ยกเลิก',
                     style: TextStyle(
@@ -317,7 +388,7 @@ class _InputScreenUiState extends State<InputScreenUi> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepOrange,
+                    backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -326,6 +397,9 @@ class _InputScreenUiState extends State<InputScreenUi> {
                       55,
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
               ],
             ),
