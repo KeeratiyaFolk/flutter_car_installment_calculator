@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter/material.dart';
 
 class InputScreenUi extends StatefulWidget {
@@ -8,6 +11,38 @@ class InputScreenUi extends StatefulWidget {
 }
 
 class _InputScreenUiState extends State<InputScreenUi> {
+  //สร้างตัวแปรเก็บรูป
+  File? _imageFile;
+  _openCamera() async {
+    final pickerImage = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+    );
+    if (pickerImage == null) return;
+    setState(() {
+      _imageFile = File(pickerImage.path);
+    });
+  }
+
+  _openGallery() async {
+    final pickerImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickerImage == null) return;
+    setState(() {
+      _imageFile = File(pickerImage.path);
+    });
+  }
+
+  //ควบคุมtextfield
+  TextEditingController _carPriceCtrl = TextEditingController();
+  TextEditingController _interestCtrl = TextEditingController();
+
+  //radio
+  int _downCtrl = 10;
+
+  //dropdown
+  int _monthCtrl = 24;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +55,282 @@ class _InputScreenUiState extends State<InputScreenUi> {
           ),
         ),
         centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 40.0,
+            right: 40.0,
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 50.0,
+                ),
+                Text(
+                  'คำนวณค่างวดรถ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 40.0,
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.green,
+                      width: 2,
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      //เปิด snackbar ให้ผู้ใช้เลือกเปิดกล้องหรือแกลอรี่
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Column(
+                            children: [
+                              ListTile(
+                                onTap: () {
+                                  _openCamera();
+                                },
+                                title: Text('เปิดกล้อง Open Camera'),
+                                textColor: Colors.white,
+                                leading: Icon(
+                                  Icons.camera,
+                                  color: Colors.greenAccent,
+                                ),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  _openGallery();
+                                },
+                                title: Text('เปิดแกลอรี่ Open Gallery'),
+                                textColor: Colors.white,
+                                leading: Icon(
+                                  Icons.image,
+                                  color: Colors.greenAccent,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: _imageFile == null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/img02.png',
+                              width: 250.0,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              _imageFile!,
+                              width: 250.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'ราคารถ (บาท)',
+                  ),
+                ),
+                TextField(
+                  controller: _carPriceCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: '0.00',
+                      hintStyle: TextStyle(fontSize: 16, color: Colors.grey)),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'จำนวนเงินดาว (%)',
+                  ),
+                ),
+                Row(
+                  children: [
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          _downCtrl = value!;
+                        });
+                      },
+                      value: 10,
+                      groupValue: _downCtrl,
+                    ),
+                    Text('10'),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          _downCtrl = value!;
+                        });
+                      },
+                      value: 20,
+                      groupValue: _downCtrl,
+                    ),
+                    Text('20'),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          _downCtrl = value!;
+                        });
+                      },
+                      value: 30,
+                      groupValue: _downCtrl,
+                    ),
+                    Text('30'),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          _downCtrl = value!;
+                        });
+                      },
+                      value: 40,
+                      groupValue: _downCtrl,
+                    ),
+                    Text('40'),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          _downCtrl = value!;
+                        });
+                      },
+                      value: 50,
+                      groupValue: _downCtrl,
+                    ),
+                    Text('50'),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'ระยะเวลาผ่อน (เดือน)',
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                    ),
+                    child: DropdownButton<int>(
+                      value: _monthCtrl,
+                      isExpanded: true,
+                      underline: Container(),
+                      onChanged: (int? value) {
+                        setState(() {
+                          _monthCtrl = value!;
+                        });
+                      },
+                      items: <int>[
+                        24,
+                        36,
+                        48,
+                        60,
+                        72,
+                      ].map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            '$value เดือน',
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'อัตราดอกเบี้ย (%/ปี)',
+                  ),
+                ),
+                TextField(
+                  controller: _interestCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: '0.00',
+                      hintStyle: TextStyle(fontSize: 16, color: Colors.grey)),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'คำนวณ',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    minimumSize: Size(
+                      double.infinity,
+                      55,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'ยกเลิก',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    minimumSize: Size(
+                      double.infinity,
+                      55,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
